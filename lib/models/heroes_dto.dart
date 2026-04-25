@@ -1,21 +1,20 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 
 Heroes heroesFromJson(String str) => Heroes.fromJson(json.decode(str));
 
 String heroesToJson(Heroes data) => json.encode(data.toJson());
 
 class Heroes {
-    String response;
-    String id;
-    String name;
-    Powerstats powerstats;
-    Biography biography;
-    Appearance appearance;
-    Work work;
-    Connections connections;
-    HeroImage heroImage;
+    final String response;
+    final String id;
+    final String name;
+    final Powerstats powerstats;
+    final Biography biography;
+    final Appearance appearance;
+    final Work work;
+    final Connections connections;
+    final HeroImage heroImage;
 
     Heroes({
         required this.response,
@@ -53,17 +52,15 @@ class Heroes {
         "image": heroImage.toJson(),
     };
 
-    
-
 }
 
 class Appearance {
-    String gender;
-    String race;
-    List<String> height;
-    List<String> weight;
-    String eyeColor;
-    String hairColor;
+    final String gender;
+    final String race;
+    final List<String> height;
+    final List<String> weight;
+    final String eyeColor;
+    final String hairColor;
 
     Appearance({
         required this.gender,
@@ -103,13 +100,13 @@ class Appearance {
 }
 
 class Biography {
-    String fullName;
-    String alterEgos;
-    List<String> aliases;
-    String placeOfBirth;
-    String firstAppearance;
-    String publisher;
-    String alignment;
+    final String fullName;
+    final String alterEgos;
+    final List<String> aliases;
+    final String placeOfBirth;
+    final String firstAppearance;
+    final String publisher;
+    final String alignment;
 
     Biography({
         required this.fullName,
@@ -152,8 +149,8 @@ class Biography {
 }
 
 class Connections {
-    String groupAffiliation;
-    String relatives;
+    final String groupAffiliation;
+    final String relatives;
 
     Connections({
         required this.groupAffiliation,
@@ -178,7 +175,7 @@ class Connections {
 }
 
 class HeroImage {
-    String url;
+    final String url;
 
     HeroImage({
         required this.url,
@@ -198,12 +195,12 @@ class HeroImage {
 }
 
 class Powerstats {
-    String intelligence;
-    String strength;
-    String speed;
-    String durability;
-    String power;
-    String combat;
+    final String intelligence;
+    final String strength;
+    final String speed;
+    final String durability;
+    final String power;
+    final String combat;
 
     Powerstats({
         required this.intelligence,
@@ -245,8 +242,8 @@ class Powerstats {
 }
 
 class Work {
-    String occupation;
-    String base;
+    final String occupation;
+    final String base;
 
     Work({
         required this.occupation,

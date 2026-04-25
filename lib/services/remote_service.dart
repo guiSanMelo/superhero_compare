@@ -7,15 +7,21 @@ class RemoteService {
 
   Future<http.Response> get(String endpoint) async {
       final uri = Uri.parse(
-        "${ApiConf.baseUrl}/${ApiConf.apiKey}/$endpoint"
+        "${ApiConf.baseUrl}/${ApiConf.apiToken}/$endpoint"
       );
-      return await client.get(uri);
+      return await client.get(
+        uri,
+        headers: {
+          'User-Agent':'Mozilla/5.0',
+          'Accept': 'application/json'
+        }
+      );
   }
 
   Future<List<Heroes>?> getAllHeroes() async {
     List<Heroes> heroes = [];
     
-    for (var i = 1; i < 51; i++) {
+    for (var i = 1; i < 2; i++) {
       var response = await get("$i");
       if (response.statusCode == 200) {
         var hero = heroesFromJson(response.body);
