@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 
 Heroes heroesFromJson(String str) => Heroes.fromJson(json.decode(str));
 
