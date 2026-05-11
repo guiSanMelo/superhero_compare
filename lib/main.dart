@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:superhero_compare/screens/home_page.dart';
-
+import 'package:superhero_compare/pages/home_page.dart';
+import 'package:superhero_compare/pages/home.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const HomePage(),
+      home: const Home(),
     );
   }
 }
