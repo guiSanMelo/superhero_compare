@@ -30,7 +30,7 @@ class _Home extends State<Home> {
         isLoaded = true;
       });
     } catch (e) {
-      print("Erro: $e");
+      debugPrint("Erro: $e");
 
       setState(() {
         heroes = [];
@@ -43,7 +43,7 @@ class _Home extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Pesquise seu Heroi"),
+        title: const Text("Pesquise seu Heroi"),
       ),
       body: Column(
         children: [
@@ -54,7 +54,7 @@ class _Home extends State<Home> {
                 MaterialPageRoute(builder: (context) => InfoHero()),
               );
             }, 
-            child: Text("Ir para Info Heroi"), // CORRIGIDO: Text definido
+            child: const Text("Ir para Info Heroi"), // CORRIGIDO: Text definido
           ),
         ],
       ),

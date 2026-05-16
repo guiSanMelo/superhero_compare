@@ -4,7 +4,7 @@ import '../models/heroes_dto.dart';
 class HeroCard extends StatelessWidget {
   final Heroes hero;
 
-  const HeroCard({super.key, required this.hero})
+  const HeroCard({super.key, required this.hero});
 
   @override
   Widget build(BuildContext context) {
@@ -33,16 +33,15 @@ class HeroCard extends StatelessWidget {
                 color: Colors.amber,
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: hero.heroImage != null
-              ? ClipRRect(
+              child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: Image.network(
-                  hero.heroImage,
+                  hero.heroImage.url,
                   fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => const Icon(Icons.broken_image, color: Colors.white),
+                  errorBuilder: (_, __, ___) =>
+                    const Icon(Icons.broken_image, color: Colors.white),
                 ),
-              )
-              : null
+              ),
             ),
             const SizedBox(width: 16),
 
@@ -58,12 +57,19 @@ class HeroCard extends StatelessWidget {
                   )
                 ),
                 const SizedBox(height: 6),
-                _TypeBadge(label: hero.biography.alignment),
+                _TypeBadge(
+                  label: hero.biography.alignment,
+                  color: hero.biography.alignment == "good"
+                    ? Colors.green
+                    : hero.biography.alignment == "bad"
+                      ? Colors.red
+                      : Colors.grey,
+                ),
               ],
             )
           ],
         ),
-    ),
+      ),
     );
   }
 }
