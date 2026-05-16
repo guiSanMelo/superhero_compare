@@ -10,9 +10,6 @@ class InfoHero extends StatefulWidget {
 class _InfoHero extends State<InfoHero> {
 
 
-
-
-
   @override
   Widget build(BuildContext context) {
     // TODO: implement build

@@ -1,37 +1,55 @@
+import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:superhero_compare/models/heroes_dto.dart';
 import 'package:superhero_compare/config/api_conf.dart';
 
 class RemoteService {
-  var client = http.Client();
+  static final http.Client _client = http.Client();
 
   Future<http.Response> get(String endpoint) async {
-      final uri = Uri.parse(
-        "${ApiConf.baseUrl}/${ApiConf.apiToken}/$endpoint"
-      );
-      return await client.get(
-        uri,
-        headers: {
-          'User-Agent':'Mozilla/5.0',
-          'Accept': 'application/json'
-        }
-      );
+    final uri = Uri.parse(
+      "${ApiConf.baseUrl}/${ApiConf.apiKey}/$endpoint",
+    );
+    return await _client.get(uri);
   }
 
-  Future<List<Heroes>?> getAllHeroes() async {
-    List<Heroes> heroes = [];
-    
-    for (var i = 1; i < 2; i++) {
-      var response = await get("$i");
+  Future<List<Heroes>> getHeroesByRange(int from, int to) async {
+    final futures = List.generate(
+      to - from,
+      (i) => getHeroById((from + i).toString()),
+    );
+
+    final results = await Future.wait(futures);
+
+    return results
+        .whereType<Heroes>()
+        .where((h) => h.response == "success")
+        .toList();
+  }
+
+  Future<Heroes?> getHeroById(String id) async {
+    try {
+      var response = await get(id);
       if (response.statusCode == 200) {
-        var hero = heroesFromJson(response.body);
-        heroes.add(hero);
+        final hero = heroesFromJson(response.body);
+        return hero.response == "success" ? hero : null;
       }
+    } catch (_) {
+      return null;
     }
-    return heroes;
-
+    return null;
   }
 
-  
-
+  Future<List<Heroes>> searchByName(String name) async {
+    try {
+      var response = await get("search/$name");
+      if (response.statusCode == 200) {
+        final result = HeroSearchResult.fromJson(jsonDecode(response.body));
+        return result.results;
+      }
+    } catch (e) {
+      return [];
+    }
+    return [];
+  }
 }
