@@ -1,7 +1,7 @@
-import 'package:superhero_compare/models/heroes_dto.dart';
-import 'package:superhero_compare/pages/info_hero.dart';
-import 'package:superhero_compare/services/remote_service.dart';
 import 'package:flutter/material.dart';
+import 'package:superhero_compare/models/heroes_dto.dart';
+import 'package:superhero_compare/services/remote_service.dart';
+import 'package:superhero_compare/shared/hero_card.dart'; 
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -11,7 +11,6 @@ class Home extends StatefulWidget {
 }
 
 class _Home extends State<Home> {
-
   List<Heroes>? heroes;
   var isLoaded = false;
 
@@ -24,14 +23,12 @@ class _Home extends State<Home> {
   Future<void> getData() async {
     try {
       var result = await RemoteService().getAllHeroes();
-
       setState(() {
         heroes = result ?? [];
         isLoaded = true;
       });
     } catch (e) {
-      print("Erro: $e");
-
+      debugPrint("Erro: $e"); // ✅ debugPrint em vez de print
       setState(() {
         heroes = [];
         isLoaded = true;
@@ -43,21 +40,22 @@ class _Home extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Pesquise seu Heroi"),
+        title: const Text("Pesquise seu Herói"),
       ),
-      body: Column(
-        children: [
-          ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => InfoHero()),
+      body: isLoaded
+    ? heroes == null || heroes!.isEmpty
+        ? const Center(child: Text("Nenhum herói encontrado"))
+        : ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: heroes!.length,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: HeroCard(hero: heroes![index]),
               );
-            }, 
-            child: Text("Ir para Info Heroi"), // CORRIGIDO: Text definido
-          ),
-        ],
-      ),
+            },
+          )
+    : const Center(child: CircularProgressIndicator()),
     );
   }
 }
