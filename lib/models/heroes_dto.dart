@@ -6,6 +6,22 @@ Heroes heroesFromJson(String str) =>
 String heroesToJson(Heroes data) =>
     json.encode(data.toJson());
 
+class HeroSearchResult {
+  final List<Heroes> results;
+
+  HeroSearchResult({required this.results});
+
+  factory HeroSearchResult.fromJson(Map<String, dynamic> json) {
+    return HeroSearchResult(
+      results: json["response"] == "success"
+          ? List<Heroes>.from(
+              (json["results"] as List).map((h) => Heroes.fromJson(h)),
+            )
+          : [],
+    );
+  }
+}
+    
 class Heroes {
   String response;
   String id;
@@ -17,6 +33,7 @@ class Heroes {
   Work work;
   Connections connections;
   HeroImage heroImage;
+  
 
   Heroes({
     required this.response,
