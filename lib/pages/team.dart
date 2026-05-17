@@ -17,6 +17,7 @@ class _TeamState extends State<Team> {
   final RemoteService _service = RemoteService();
 
   int selecionandoSlot = -1;
+  int poderTotal = 0;
   List<Heroes> heroes = [];
   List<Heroes> filteredHeroes = [];
   List<Heroes> team = [];
@@ -71,6 +72,13 @@ class _TeamState extends State<Team> {
     });
   }
 
+  void _calcularPoderTotal() {
+    // if (team.length != 6) return;
+    setState(() {
+      poderTotal = team.fold<int>(0, (soma, h) => soma + (int.tryParse(h.powerstats.power) ?? 0));
+    });
+  }
+
   void _ativarSelecaoSlot(int slot) {
     setState(() {
       selecionandoSlot = slot;
@@ -84,6 +92,8 @@ class _TeamState extends State<Team> {
       team.add(hero);
       selecionandoSlot = -1;
     });
+
+    _calcularPoderTotal();
   }
 
   @override
@@ -93,6 +103,8 @@ class _TeamState extends State<Team> {
       body: Column(
         children: [
           const SizedBox(height: 12),
+
+          Text('Poder total: $poderTotal'),
 
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -219,6 +231,7 @@ class _TeamState extends State<Team> {
                               ),
                             ],
                           ),
+                          
                   ),
                 );
               },
