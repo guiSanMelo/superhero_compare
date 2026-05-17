@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:superhero_compare/models/heroes_dto.dart';
 import 'package:superhero_compare/services/remote_service.dart';
 import 'package:superhero_compare/shared/hero_card.dart';
+import 'package:superhero_compare/shared/app_bar.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -21,11 +22,11 @@ class _Home extends State<Home> {
   bool _isSearching = false;
   bool _isSearchLoading = false;
 
-  Timer? _debounce; // ✅ evita chamada a cada letra digitada
+  Timer? _debounce;
 
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _searchController = TextEditingController();
-  final RemoteService _service = RemoteService(); // ✅ instância única
+  final RemoteService _service = RemoteService();
 
   @override
   void initState() {
@@ -62,7 +63,6 @@ class _Home extends State<Home> {
     const batchSize = 20;
     final to = (_currentId + batchSize).clamp(0, 732);
 
-    // ✅ paralelo: 20 requisições ao mesmo tempo
     final newHeroes = await _service.getHeroesByRange(_currentId, to);
 
     setState(() {
@@ -74,7 +74,7 @@ class _Home extends State<Home> {
   }
 
   void _onSearchChanged(String query) {
-    _debounce?.cancel(); // ✅ cancela o timer anterior
+    _debounce?.cancel();
 
     if (query.isEmpty) {
       setState(() {
@@ -86,7 +86,6 @@ class _Home extends State<Home> {
 
     setState(() => _isSearching = true);
 
-    // ✅ só dispara a busca 500ms após parar de digitar
     _debounce = Timer(const Duration(milliseconds: 500), () async {
       setState(() => _isSearchLoading = true);
 
@@ -104,9 +103,11 @@ class _Home extends State<Home> {
     final displayList = _isSearching ? searchResults : heroes;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Pesquisar Heróis"),
+      appBar: const CustomAppBar(
+        title: "HeroCompare",
+        showBackButton: false,
       ),
+
       body: Column(
         children: [
           Padding(
@@ -131,6 +132,7 @@ class _Home extends State<Home> {
               ),
             ),
           ),
+
           Expanded(
             child: _isSearchLoading
                 ? const Center(child: CircularProgressIndicator())
@@ -141,14 +143,18 @@ class _Home extends State<Home> {
                         : ListView.builder(
                             controller: _scrollController,
                             padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
-                            itemCount: displayList.length + (!_isSearching && _hasMore ? 1 : 0),
+                            itemCount: displayList.length +
+                                (!_isSearching && _hasMore ? 1 : 0),
                             itemBuilder: (context, index) {
                               if (index == displayList.length) {
                                 return const Padding(
                                   padding: EdgeInsets.symmetric(vertical: 16),
-                                  child: Center(child: CircularProgressIndicator()),
+                                  child: Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
                                 );
                               }
+
                               return Padding(
                                 padding: const EdgeInsets.only(bottom: 12),
                                 child: HeroCard(hero: displayList[index]),

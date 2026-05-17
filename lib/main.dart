@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:superhero_compare/pages/home.dart';
+import 'package:superhero_compare/navigation/root_navigation.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const Home(),
+      home: const RootNavigation(),
     );
   }
 }
