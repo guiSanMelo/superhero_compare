@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/heroes_dto.dart';
+import 'package:superhero_compare/shared/app_bar.dart';
 
 class InfoHero extends StatelessWidget {
   final Heroes hero;
@@ -14,26 +15,10 @@ class InfoHero extends StatelessWidget {
       child: Scaffold(
         backgroundColor: const Color(0xFFF7F1E1),
 
-        appBar: AppBar(
-          backgroundColor: const Color(0xFFF7F1E1),
-          elevation: 0,
-          centerTitle: true,
-
-          title: const Text(
-            "HeroCompare",
-            style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-        ),
+        appBar: const CustomAppBar(
+          title: "HeroCompare",
+          showBackButton: true,
+      ),
 
         body: Column(
           children: [

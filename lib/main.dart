@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:superhero_compare/config/supabase_conf.dart';
-import 'package:superhero_compare/pages/home.dart';
+import 'package:superhero_compare/navigation/root_navigation.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Supabase.initialize(
@@ -19,13 +19,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'SuperHeroCompare',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const Home(),
+      home: RootNavigation(),
     );
   }
 }
