@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:superhero_compare/pages/home_page.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:superhero_compare/config/supabase_conf.dart';
 import 'package:superhero_compare/pages/home.dart';
-void main() {
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Supabase.initialize(
+    url: SupabaseConf.url,
+    anonKey: SupabaseConf.anonKey,
+  );
+
   runApp(const MyApp());
 }
 
