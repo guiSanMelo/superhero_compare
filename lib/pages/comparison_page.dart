@@ -27,28 +27,32 @@ class ComparePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFF0F0F1A),
       // Apenas mude o AppBar dentro da ComparePage:
-        appBar: AppBar(
-          backgroundColor: const Color(0xFFF7F1E1),
-          elevation: 0,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () => Navigator.pop(context),
-          ),
-          title: const Text(
-            'Comparação',
-            style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.w700,
-              fontSize: 18,
-            ),
-          ),
-          centerTitle: true,
+      appBar: AppBar(
+        backgroundColor: const Color(0xFFF7F1E1),
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.pop(context),
         ),
+        title: const Text(
+          'Comparação',
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.w700,
+            fontSize: 18,
+          ),
+        ),
+        centerTitle: true,
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
         child: Column(
           children: [
-            _HeroesHeader(heroA: heroA, heroB: heroB, alignmentColor: _alignmentColor),
+            _HeroesHeader(
+              heroA: heroA,
+              heroB: heroB,
+              alignmentColor: _alignmentColor,
+            ),
             const SizedBox(height: 28),
             _PowerstatsComparison(
               heroA: heroA,
@@ -79,7 +83,13 @@ class _HeroesHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Expanded(child: _HeroAvatar(hero: heroA, alignmentColor: alignmentColor, isLeft: true)),
+        Expanded(
+          child: _HeroAvatar(
+            hero: heroA,
+            alignmentColor: alignmentColor,
+            isLeft: true,
+          ),
+        ),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
           decoration: BoxDecoration(
@@ -97,7 +107,13 @@ class _HeroesHeader extends StatelessWidget {
             ),
           ),
         ),
-        Expanded(child: _HeroAvatar(hero: heroB, alignmentColor: alignmentColor, isLeft: false)),
+        Expanded(
+          child: _HeroAvatar(
+            hero: heroB,
+            alignmentColor: alignmentColor,
+            isLeft: false,
+          ),
+        ),
       ],
     );
   }
@@ -127,7 +143,11 @@ class _HeroAvatar extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
             border: Border.all(color: color, width: 2.5),
             boxShadow: [
-              BoxShadow(color: color.withValues(alpha: 0.35), blurRadius: 16, spreadRadius: 2),
+              BoxShadow(
+                color: color.withValues(alpha: 0.35),
+                blurRadius: 16,
+                spreadRadius: 2,
+              ),
             ],
           ),
           child: ClipRRect(
@@ -135,7 +155,8 @@ class _HeroAvatar extends StatelessWidget {
             child: Image.network(
               hero.heroImage.url,
               fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => const Icon(Icons.broken_image, color: Colors.white38),
+              errorBuilder: (_, __, ___) =>
+                  const Icon(Icons.broken_image, color: Colors.white38),
             ),
           ),
         ),
@@ -161,7 +182,11 @@ class _HeroAvatar extends StatelessWidget {
           ),
           child: Text(
             hero.biography.alignment,
-            style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.w600),
+            style: TextStyle(
+              color: color,
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
       ],
@@ -235,12 +260,7 @@ class _PowerstatsComparison extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Placar geral
-        _ScoreCard(
-          heroA: heroA,
-          heroB: heroB,
-          totalA: totalA,
-          totalB: totalB,
-        ),
+        _ScoreCard(heroA: heroA, heroB: heroB, totalA: totalA, totalB: totalB),
         const SizedBox(height: 20),
 
         const Text(
@@ -254,14 +274,16 @@ class _PowerstatsComparison extends StatelessWidget {
         ),
         const SizedBox(height: 12),
 
-        ...stats.map((stat) => _StatRow(
-              label: stat['label'],
-              icon: stat['icon'],
-              valueA: parseStatValue(stat['a']),
-              valueB: parseStatValue(stat['b']),
-              rawA: stat['a'],
-              rawB: stat['b'],
-            )),
+        ...stats.map(
+          (stat) => _StatRow(
+            label: stat['label'],
+            icon: stat['icon'],
+            valueA: parseStatValue(stat['a']),
+            valueB: parseStatValue(stat['b']),
+            rawA: stat['a'],
+            rawB: stat['b'],
+          ),
+        ),
       ],
     );
   }
@@ -287,7 +309,11 @@ class _ScoreCard extends StatelessWidget {
     final maxTotal = 600; // 6 stats × 100
     final percA = totalA / maxTotal;
     final percB = totalB / maxTotal;
-    final winner = totalA > totalB ? heroA.name : totalB > totalA ? heroB.name : null;
+    final winner = totalA > totalB
+        ? heroA.name
+        : totalB > totalA
+        ? heroB.name
+        : null;
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -304,7 +330,9 @@ class _ScoreCard extends StatelessWidget {
               Text(
                 '$totalA pts',
                 style: TextStyle(
-                  color: totalA >= totalB ? const Color(0xFF60A5FA) : Colors.white38,
+                  color: totalA >= totalB
+                      ? const Color(0xFF60A5FA)
+                      : Colors.white38,
                   fontWeight: FontWeight.w800,
                   fontSize: 20,
                 ),
@@ -320,7 +348,9 @@ class _ScoreCard extends StatelessWidget {
               Text(
                 '$totalB pts',
                 style: TextStyle(
-                  color: totalB >= totalA ? const Color(0xFFF87171) : Colors.white38,
+                  color: totalB >= totalA
+                      ? const Color(0xFFF87171)
+                      : Colors.white38,
                   fontWeight: FontWeight.w800,
                   fontSize: 20,
                 ),
@@ -335,17 +365,11 @@ class _ScoreCard extends StatelessWidget {
               children: [
                 Expanded(
                   flex: (percA * 100).round(),
-                  child: Container(
-                    height: 10,
-                    color: const Color(0xFF3B82F6),
-                  ),
+                  child: Container(height: 10, color: const Color(0xFF3B82F6)),
                 ),
                 Expanded(
                   flex: (percB * 100).round(),
-                  child: Container(
-                    height: 10,
-                    color: const Color(0xFFEF4444),
-                  ),
+                  child: Container(height: 10, color: const Color(0xFFEF4444)),
                 ),
               ],
             ),
@@ -447,21 +471,29 @@ class _StatRow extends StatelessWidget {
                                         height: 8,
                                         decoration: BoxDecoration(
                                           color: Colors.white10,
-                                          borderRadius: BorderRadius.circular(4),
+                                          borderRadius: BorderRadius.circular(
+                                            4,
+                                          ),
                                         ),
                                       ),
                                       Positioned(
                                         right: 0,
                                         child: AnimatedContainer(
-                                          duration: const Duration(milliseconds: 700),
+                                          duration: const Duration(
+                                            milliseconds: 700,
+                                          ),
                                           curve: Curves.easeOutCubic,
                                           height: 8,
                                           width: constraints.maxWidth * percA,
                                           decoration: BoxDecoration(
                                             color: aWins
                                                 ? const Color(0xFF3B82F6)
-                                                : const Color(0xFF3B82F6).withValues(alpha: 0.5),
-                                            borderRadius: BorderRadius.circular(4),
+                                                : const Color(
+                                                    0xFF3B82F6,
+                                                  ).withValues(alpha: 0.5),
+                                            borderRadius: BorderRadius.circular(
+                                              4,
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -497,7 +529,9 @@ class _StatRow extends StatelessWidget {
                                   decoration: BoxDecoration(
                                     color: bWins
                                         ? const Color(0xFFEF4444)
-                                        : const Color(0xFFEF4444).withValues(alpha: 0.5),
+                                        : const Color(
+                                            0xFFEF4444,
+                                          ).withValues(alpha: 0.5),
                                     borderRadius: BorderRadius.circular(4),
                                   ),
                                 ),

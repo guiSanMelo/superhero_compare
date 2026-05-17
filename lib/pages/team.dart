@@ -37,10 +37,7 @@ class _TeamState extends State<Team> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
-        title: "HeroCompare",
-        showBackButton: false,
-      ),
+      appBar: const CustomAppBar(title: "HeroCompare", showBackButton: false),
       body: Column(
         children: [
           const SizedBox(height: 12),
@@ -103,10 +100,7 @@ class _TeamState extends State<Team> {
               children: [
                 const Text(
                   "Seleção de Heróis",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 IconButton(
                   icon: const Icon(Icons.filter_list),
@@ -132,8 +126,7 @@ class _TeamState extends State<Team> {
                         child: GestureDetector(
                           onTap: () {
                             setState(() {
-                              if (team.length < 6 &&
-                                  !team.contains(hero)) {
+                              if (team.length < 6 && !team.contains(hero)) {
                                 team.add(hero);
                               }
                             });

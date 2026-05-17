@@ -24,11 +24,13 @@ class _Home extends State<Home> {
   bool _hasMore = true;
   bool _isSearching = false;
   bool _isSearchLoading = false;
+  bool _keyboardWasVisible = false;
 
   Timer? _debounce;
 
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _searchController = TextEditingController();
+  final FocusNode _searchFocusNode = FocusNode();
   final RemoteService _service = RemoteService();
 
   @override
@@ -37,8 +39,17 @@ class _Home extends State<Home> {
     _loadMore();
 
     _scrollController.addListener(() {
+      if (!_scrollController.position.hasContentDimensions) return;
+
+      final keyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
+      if (keyboardVisible || _keyboardWasVisible) {
+        _keyboardWasVisible = keyboardVisible;
+        return;
+      }
+
       final nearBottom = _scrollController.position.pixels >=
           _scrollController.position.maxScrollExtent - 300;
+
       if (nearBottom && !_isLoading && _hasMore && !_isSearching) {
         _loadMore();
       }
@@ -54,6 +65,7 @@ class _Home extends State<Home> {
     _debounce?.cancel();
     _scrollController.dispose();
     _searchController.dispose();
+    _searchFocusNode.dispose();
     super.dispose();
   }
 
@@ -142,7 +154,7 @@ class _Home extends State<Home> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Barra de busca + botão filtro
+          // Barra de busca + botão comparação
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
             child: Row(
@@ -163,15 +175,25 @@ class _Home extends State<Home> {
                     ),
                     child: TextField(
                       controller: _searchController,
+                      focusNode: _searchFocusNode,
+                      keyboardType: TextInputType.text,
+                      textInputAction: TextInputAction.search,
+                      onSubmitted: (_) => FocusScope.of(context).unfocus(),
                       decoration: InputDecoration(
                         hintText: "Buscar Herói...",
                         hintStyle: const TextStyle(color: Colors.black38),
                         suffixIcon: _isSearching
                             ? IconButton(
-                                icon: const Icon(Icons.close, color: Colors.black54),
+                                icon: const Icon(
+                                  Icons.close,
+                                  color: Colors.black54,
+                                ),
                                 onPressed: () => _searchController.clear(),
                               )
-                            : const Icon(Icons.search, color: Colors.black54),
+                            : const Icon(
+                                Icons.search,
+                                color: Colors.black54,
+                              ),
                         border: InputBorder.none,
                         contentPadding: const EdgeInsets.symmetric(
                           horizontal: 16,
@@ -184,7 +206,6 @@ class _Home extends State<Home> {
 
                 const SizedBox(width: 10),
 
-                // Botão de filtro estilo mockup
                 GestureDetector(
                   onTap: () => _toggleModoComparacao(!modoComparacao),
                   child: Tooltip(
@@ -217,7 +238,7 @@ class _Home extends State<Home> {
             ),
           ),
 
-          // Toggle modo comparação
+          // Toggle modo duelo
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
             child: Row(
@@ -241,7 +262,7 @@ class _Home extends State<Home> {
             ),
           ),
 
-          
+          // Banner de seleção
           if (modoComparacao)
             Container(
               margin: const EdgeInsets.fromLTRB(16, 8, 16, 0),
@@ -316,9 +337,13 @@ class _Home extends State<Home> {
           // Lista
           Expanded(
             child: _isSearchLoading
-                ? const Center(child: CircularProgressIndicator(color: Colors.black))
+                ? const Center(
+                    child: CircularProgressIndicator(color: Colors.black),
+                  )
                 : displayList.isEmpty && _isLoading
-                    ? const Center(child: CircularProgressIndicator(color: Colors.black))
+                    ? const Center(
+                        child: CircularProgressIndicator(color: Colors.black),
+                      )
                     : displayList.isEmpty && _isSearching
                         ? const Center(
                             child: Text(
@@ -352,7 +377,8 @@ class _Home extends State<Home> {
                                   selecionado: heroisSelecionados.any(
                                     (h) => h.id == hero.id,
                                   ),
-                                  onToggleSelecao: () => _toggleSelecaoHeroi(hero),
+                                  onToggleSelecao: () =>
+                                      _toggleSelecaoHeroi(hero),
                                 ),
                               );
                             },

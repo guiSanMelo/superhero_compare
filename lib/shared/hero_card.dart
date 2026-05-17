@@ -68,7 +68,9 @@ class HeroCard extends StatelessWidget {
                     height: 64,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: _alignmentColor(hero.biography.alignment).withValues(alpha: 0.3),
+                      color: _alignmentColor(
+                        hero.biography.alignment,
+                      ).withValues(alpha: 0.3),
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
