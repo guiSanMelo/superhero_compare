@@ -1,110 +1,153 @@
-# 🦸‍♂️ SuperHero Compare
+# 🦸 HeroCompare
 
-**Comparação épica de super-heróis** — Projeto de Desenvolvimento Mobile (2026.1) - ICEV
+Aplicativo mobile desenvolvido em **Flutter** para a disciplina de Desenvolvimento Mobile 2026.1 — **ICEV**.
+
+Explore, busque e compare super-heróis do universo Marvel e DC lado a lado, montando seu time dos sonhos.
 
 ---
 
-## 📱 Sobre o Projeto
-
-SuperHero Compare é um aplicativo mobile desenvolvido em **Flutter** que permite aos usuários:
-
-- Explorar uma vasta lista de super-heróis
-- Buscar heróis por nome
-- Selecionar **dois heróis** e compará-los lado a lado
-- Visualizar informações detalhadas de cada personagem
-
-Perfeito para quem ama quadrinhos, filmes e quer saber quem venceria em um duelo entre seus heróis favoritos!
-
 ## ✨ Funcionalidades
 
-- Infinite Scroll com carregamento progressivo
-- Busca em tempo real com debounce
-- Modo Duelo (seleção de até 2 heróis)
-- Comparação detalhada (poderes, biografia, aparência, etc.)
-- Design clean e temático com estilo "comic book"
-- Integração com **Supabase** (autenticação e banco)
-- Consumo de API de super-heróis
+- 🔍 Busca de heróis por nome em tempo real
+- ⚔️ Modo Duelo — compare dois heróis lado a lado
+- 🛡️ Monte seu time com até 6 heróis
+- 📊 Veja stats detalhados: inteligência, força, velocidade, durabilidade, poder e combate
+- 🎭 Filtros por alinhamento (Herói, Vilão, Neutro) e poder mínimo
+- 📖 Página de detalhes com biografia, aparência e estatísticas
+- 💾 Time salvo localmente — persiste entre sessões
 
-## 🛠 Tecnologias Utilizadas
+---
 
-- **Flutter** (Dart)
-- **Supabase Flutter**
-- **HTTP** para consumo de API
-- Arquitetura limpa com separação de concerns
+## 🛠 Tecnologias
 
-## 🚀 Como Rodar o Projeto no Celular Físico
+- [Flutter](https://flutter.dev/) + Dart
+- [SuperHero API](https://superheroapi.com/)
+- [Supabase Flutter](https://supabase.com/docs/reference/dart/introduction)
+- [Shared Preferences](https://pub.dev/packages/shared_preferences)
+- [HTTP](https://pub.dev/packages/http)
 
-### 1. Ative a Depuração USB no seu celular
+---
 
-1. Abra as **Configurações** do celular
-2. Vá em **Sobre o telefone** (ou Informações do dispositivo)
-3. Toque várias vezes (7x) no **Número da compilação** até aparecer "Você agora é um desenvolvedor!"
-4. Volte e procure por **Opções do desenvolvedor**
-5. Ative a opção **Depuração USB**
-
-### 2. Conecte o celular no computador
-
-- Conecte o celular via cabo USB
-- No celular, autorize a depuração USB quando a mensagem aparecer
-- Confie neste computador (se for a primeira vez)
-
-### 3. Execute o app
-
-Abra o terminal na pasta do projeto e rode:
-
-```bash
-# Entre na pasta do projeto
-cd superhero_compare
-
-# Instale as dependências
-flutter pub get
-
-# Verifique se o celular foi detectado
-flutter devices
-```
-
-Você deve ver seu celular listado. Agora rode o aplicativo:
-
-```bash
-# Rode no celular
-flutter run
-```
-
-### Dicas úteis
-
-- Para modo mais rápido: `flutter run --release`
-- Ver logs detalhados: `flutter run -v`
-- Se tiver mais de um dispositivo: `flutter run -d SEU_DEVICE_ID`
-
-## 📁 Estrutura de Pastas
+## 📁 Estrutura do Projeto
 
 ```
 lib/
-├── config/             # Configurações (Supabase)
-├── models/             # Modelos de dados
-├── navigation/         # Navegação
-├── pages/              # Telas do app
-├── services/           # Serviços e API
-├── shared/             # Componentes reutilizáveis
+├── config/         # api_conf.dart, supabase_conf.dart
+├── models/         # heroes_dto.dart
+├── navigation/     # root_navigation.dart
+├── pages/          # home, team, login, info_hero, comparison
+├── routes/         # app_routes.dart
+├── services/       # remote_service, auth_service, supabase_service
+├── shared/         # hero_card, app_bar, bottom_nav, filter_button
 └── main.dart
 ```
 
-## 🎯 Próximos Passos
+---
 
-- [ ] Tela de favoritos
-- [ ] Filtros avançados (editora, poderes, etc.)
-- [ ] Ranking de heróis
-- [ ] Modo escuro
-- [ ] Compartilhamento de comparações
+## 🚀 Rodando no Celular Físico
 
-## 👨‍💻 Autor
+### Pré-requisitos
 
-**Guilherme Santos de Melo**
+- [Flutter SDK](https://docs.flutter.dev/get-started/install) instalado
+- Android 5.0+ ou iOS 12+
+- Cabo USB
 
-**João Antônio Martins de Almeida Alves**
+### Passo a passo
 
-**Laura Maria Madeira Borges Teixeira**
+**1. Clone o repositório**
+```bash
+git clone https://github.com/guiSanMelo/superhero_compare.git
+cd superhero_compare
+```
 
-**Romerson Claudino Gonsalves Filho**
+**2. Instale as dependências**
+```bash
+flutter pub get
+```
 
-Projeto acadêmico - ICEV 2026.1
+**3. Ative a Depuração USB no celular (Android)**
+
+- Vá em **Configurações → Sobre o telefone**
+- Toque 7 vezes no **Número da compilação** até aparecer _"Você é um desenvolvedor!"_
+- Volte e acesse **Opções do desenvolvedor**
+- Ative **Depuração USB**
+- Conecte o celular via cabo USB e, quando aparecer a mensagem no celular, toque em **Permitir**
+
+**4. Verifique se o dispositivo foi reconhecido**
+```bash
+flutter devices
+```
+Seu celular deve aparecer na lista.
+
+**5. Rode o app**
+```bash
+flutter run
+```
+
+> Para instalar a versão final sem modo debug, use `flutter run --release`
+
+---
+
+## 🖥️ Rodando no Android Studio
+
+### Pré-requisitos
+
+- [Android Studio](https://developer.android.com/studio) instalado
+- Plugin **Flutter** e **Dart** instalados no Android Studio
+  - Vá em `File → Settings → Plugins`, busque por `Flutter` e instale (o Dart é instalado junto)
+
+### Passo a passo
+
+**1. Abra o projeto**
+
+- No Android Studio, clique em **Open**
+- Navegue até a pasta `superhero_compare` e selecione-a
+
+**2. Configure o SDK do Flutter**
+
+- Vá em `File → Settings → Languages & Frameworks → Flutter`
+- Informe o caminho do Flutter SDK (ex: `C:\flutter` ou `~/flutter`)
+
+**3. Instale as dependências**
+
+- Abra o terminal integrado (`View → Tool Windows → Terminal`) e rode:
+```bash
+flutter pub get
+```
+Ou clique em **"Pub get"** no banner que aparece no topo do `pubspec.yaml`.
+
+**4. Selecione o dispositivo**
+
+No topo da tela, na barra de ferramentas, clique no seletor de dispositivos (onde aparece _"No device"_) e escolha:
+- Um **celular físico** conectado via USB
+- Um **emulador Android** (se não tiver um criado, vá em `Device Manager → Create Device`)
+
+**5. Rode o app**
+
+Clique no botão ▶️ **Run** (ou pressione `Shift + F10`).
+
+---
+
+## 📦 Instalando o APK diretamente
+
+Se quiser instalar sem precisar do ambiente de desenvolvimento, o repositório contém um APK pronto:
+
+1. Baixe o arquivo `apk (1).zip` da raiz do repositório
+2. Extraia o `.apk`
+3. Transfira para o celular e abra o arquivo
+4. Caso apareça um aviso de segurança, vá em **Configurações → Instalar apps desconhecidos** e permita a instalação
+
+---
+
+## 👨‍💻 Autores
+
+Projeto acadêmico desenvolvido por:
+
+| Nome |
+|---|
+| Guilherme Santos de Melo |
+| João Antônio Martins de Almeida Alves |
+| Laura Maria Madeira Borges Teixeira |
+| Romerson Claudino Gonsalves Filho |
+
+**ICEV — Desenvolvimento Mobile 2026.1**
