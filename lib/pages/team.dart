@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
-import '../models/heroes_dto.dart';
-import '../services/remote_service.dart';
-import '../shared/app_bar.dart';
-import '../shared/hero_card.dart';
+import 'package:superhero_compare/models/heroes_dto.dart';
+import 'package:superhero_compare/services/remote_service.dart';
+import 'package:superhero_compare/shared/hero_card.dart';
+import 'package:superhero_compare/shared/app_bar.dart';
+import 'package:superhero_compare/shared/filter_button.dart';
 
 class Team extends StatefulWidget {
   const Team({super.key});
@@ -16,9 +18,13 @@ class _TeamState extends State<Team> {
 
   int selecionandoSlot = -1;
   List<Heroes> heroes = [];
+  List<Heroes> filteredHeroes = [];
   List<Heroes> team = [];
 
   bool isLoading = true;
+
+  AlignmentFilter _selectedAlignment = AlignmentFilter.all;
+  double _powerMin = 0;
 
   @override
   void initState() {
@@ -26,16 +32,42 @@ class _TeamState extends State<Team> {
     _loadHeroes();
   }
 
-  // void _toggleSelecaoHeroi(Heroes hero) {
-  //   final heroiSelecionado = 
-  // }
-
   Future<void> _loadHeroes() async {
     final data = await _service.getHeroesByRange(1, 50);
 
     setState(() {
       heroes = data;
+      filteredHeroes = data;
       isLoading = false;
+    });
+  }
+
+  void _applyFilters(AlignmentFilter alignment, double powerMin) {
+    setState(() {
+      _selectedAlignment = alignment;
+      _powerMin = powerMin;
+
+      filteredHeroes = heroes.where((hero) {
+        final alignmentStr = hero.biography.alignment.toLowerCase();
+
+        final passaAlignment = switch (_selectedAlignment) {
+          AlignmentFilter.hero => alignmentStr == 'good',
+          AlignmentFilter.villain => alignmentStr == 'bad',
+          AlignmentFilter.neutral => alignmentStr != 'good' && alignmentStr != 'bad',
+          AlignmentFilter.all => true,
+        };
+
+        final totalPower = [
+          hero.powerstats.intelligence,
+          hero.powerstats.strength,
+          hero.powerstats.speed,
+          hero.powerstats.durability,
+          hero.powerstats.power,
+          hero.powerstats.combat,
+        ].fold<int>(0, (sum, v) => sum + (int.tryParse(v) ?? 0));
+
+        return passaAlignment && totalPower >= _powerMin;
+      }).toList();
     });
   }
 
@@ -79,9 +111,7 @@ class _TeamState extends State<Team> {
 
                 return GestureDetector(
                   onTap: hero == null
-                      ? () {
-                          _ativarSelecaoSlot(index);
-                        }
+                      ? () => _ativarSelecaoSlot(index)
                       : null,
                   child: Container(
                     decoration: BoxDecoration(
@@ -121,7 +151,6 @@ class _TeamState extends State<Team> {
                           )
                         : Stack(
                             children: [
-                              // Imagem do herói
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
                                 child: Image.network(
@@ -131,7 +160,6 @@ class _TeamState extends State<Team> {
                                       const Icon(Icons.broken_image),
                                 ),
                               ),
-                              // Nome no rodapé
                               Positioned(
                                 bottom: 0,
                                 left: 0,
@@ -161,7 +189,6 @@ class _TeamState extends State<Team> {
                                   ),
                                 ),
                               ),
-                              // Botão fechar
                               Positioned(
                                 right: 4,
                                 top: 4,
@@ -200,7 +227,6 @@ class _TeamState extends State<Team> {
 
           const SizedBox(height: 12),
 
-          // Banner indicando modo seleção
           if (selecionandoSlot != -1)
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 12),
@@ -269,9 +295,10 @@ class _TeamState extends State<Team> {
                   "Seleção de Heróis",
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
-                IconButton(
-                  icon: const Icon(Icons.filter_list),
-                  onPressed: () {},
+                FilterButton(
+                  selectedAlignment: _selectedAlignment,
+                  powerMin: _powerMin,
+                  onApply: _applyFilters,
                 ),
               ],
             ),
@@ -284,16 +311,15 @@ class _TeamState extends State<Team> {
                 ? const Center(child: CircularProgressIndicator())
                 : ListView.builder(
                     padding: const EdgeInsets.symmetric(horizontal: 12),
-                    itemCount: heroes.length,
+                    itemCount: filteredHeroes.length,
                     itemBuilder: (context, index) {
-                      final hero = heroes[index];
+                      final hero = filteredHeroes[index];
 
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 12),
                         child: GestureDetector(
                           onTap: () {
                             if (selecionandoSlot == -1) {
-                              // Modo normal - adiciona sem ativar seleção
                               if (team.length < 6 && !team.contains(hero)) {
                                 setState(() {
                                   team.add(hero);
