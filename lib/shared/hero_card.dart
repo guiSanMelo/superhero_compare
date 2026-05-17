@@ -19,11 +19,11 @@ class HeroCard extends StatelessWidget {
   Color _alignmentColor(String alignment) {
     switch (alignment.toLowerCase()) {
       case 'good':
-        return Colors.blue;
+        return const Color(0xFF4FC3F7); // azul claro do mockup
       case 'bad':
-        return Colors.red;
+        return const Color(0xFFEF5350); // vermelho
       default:
-        return Colors.grey;
+        return const Color(0xFF7E57C2); // roxo para neutro
     }
   }
 
@@ -36,54 +36,54 @@ class HeroCard extends StatelessWidget {
         } else {
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (context) => InfoHero(hero: hero),
-            ),
+            MaterialPageRoute(builder: (context) => InfoHero(hero: hero)),
           );
         }
       },
-
       child: Stack(
         children: [
           Container(
             decoration: BoxDecoration(
-              color: selecionado ? Colors.blue.withValues(alpha: 0.08) : Colors.white,
+              color: Colors.white,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
                 color: selecionado ? Colors.blue : Colors.black,
-                width: selecionado ? 2 : 1.5,
+                width: selecionado ? 2.5 : 2,
               ),
               boxShadow: const [
                 BoxShadow(
-                  color: Color(0x22000000),
-                  blurRadius: 4,
-                  offset: Offset(2, 2),
-                )
+                  color: Color(0x33000000),
+                  blurRadius: 0,
+                  offset: Offset(3, 3),
+                ),
               ],
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
               child: Row(
                 children: [
+                  // Imagem do herói
                   Container(
-                    width: 60,
-                    height: 60,
+                    width: 64,
+                    height: 64,
                     decoration: BoxDecoration(
-                      color: Colors.amber,
                       borderRadius: BorderRadius.circular(10),
+                      color: _alignmentColor(hero.biography.alignment).withValues(alpha: 0.3),
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: Image.network(
                         hero.heroImage.url,
                         fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) =>
-                            const Icon(Icons.broken_image, color: Colors.white),
+                        errorBuilder: (_, __, ___) => const Icon(
+                          Icons.broken_image,
+                          color: Colors.black38,
+                        ),
                       ),
                     ),
                   ),
 
-                  const SizedBox(width: 16),
+                  const SizedBox(width: 14),
 
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -92,14 +92,12 @@ class HeroCard extends StatelessWidget {
                         hero.name,
                         style: const TextStyle(
                           fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF1A1A2E),
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black,
                         ),
                       ),
-
                       const SizedBox(height: 6),
-
-                      _TypeBadge(
+                      _AlignmentBadge(
                         label: hero.biography.alignment,
                         color: _alignmentColor(hero.biography.alignment),
                       ),
@@ -110,7 +108,7 @@ class HeroCard extends StatelessWidget {
             ),
           ),
 
-          // Checkbox sobreposto no canto superior esquerdo
+          // Checkbox modo comparação
           if (modoComparacao)
             Positioned(
               top: 6,
@@ -123,7 +121,7 @@ class HeroCard extends StatelessWidget {
                     color: selecionado ? Colors.blue : Colors.white,
                     borderRadius: BorderRadius.circular(4),
                     border: Border.all(
-                      color: selecionado ? Colors.blue : Colors.grey,
+                      color: selecionado ? Colors.blue : Colors.black54,
                       width: 2,
                     ),
                   ),
@@ -139,26 +137,37 @@ class HeroCard extends StatelessWidget {
   }
 }
 
-class _TypeBadge extends StatelessWidget {
+class _AlignmentBadge extends StatelessWidget {
   final String label;
   final Color color;
 
-  const _TypeBadge({required this.label, required this.color});
+  const _AlignmentBadge({required this.label, required this.color});
+
+  String _labelPt(String alignment) {
+    switch (alignment.toLowerCase()) {
+      case 'good':
+        return 'Herói';
+      case 'bad':
+        return 'Vilão';
+      default:
+        return 'Neutro';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 3),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color, width: 1),
+        border: Border.all(color: color, width: 1.5),
       ),
       child: Text(
-        label,
+        _labelPt(label),
         style: TextStyle(
           fontSize: 12,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w700,
           color: color,
         ),
       ),

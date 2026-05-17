@@ -4,7 +4,7 @@ import 'package:superhero_compare/models/heroes_dto.dart';
 import 'package:superhero_compare/services/remote_service.dart';
 import 'package:superhero_compare/shared/hero_card.dart';
 import 'package:superhero_compare/shared/app_bar.dart';
-import 'package:superhero_compare/pages/comparison_page.dart'; 
+import 'package:superhero_compare/pages/comparison_page.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -39,7 +39,6 @@ class _Home extends State<Home> {
     _scrollController.addListener(() {
       final nearBottom = _scrollController.position.pixels >=
           _scrollController.position.maxScrollExtent - 300;
-
       if (nearBottom && !_isLoading && _hasMore && !_isSearching) {
         _loadMore();
       }
@@ -107,7 +106,6 @@ class _Home extends State<Home> {
   void _toggleSelecaoHeroi(Heroes hero) {
     setState(() {
       final jaSelecionado = heroisSelecionados.any((h) => h.id == hero.id);
-
       if (jaSelecionado) {
         heroisSelecionados.removeWhere((h) => h.id == hero.id);
       } else if (heroisSelecionados.length < 2) {
@@ -138,55 +136,79 @@ class _Home extends State<Home> {
     final displayList = _isSearching ? searchResults : heroes;
 
     return Scaffold(
-      appBar: const CustomAppBar(
-        title: "HeroCompare",
-        showBackButton: false,
-      ),
+      backgroundColor: const Color(0xFFF7F1E1),
+      appBar: const CustomAppBar(title: "HeroCompare", showBackButton: false),
 
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Barra de busca + botão filtro
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
             child: Row(
               children: [
                 Expanded(
-                  child: TextField(
-                    controller: _searchController,
-                    decoration: InputDecoration(
-                      hintText: "Buscar herói...",
-                      prefixIcon: const Icon(Icons.search),
-                      suffixIcon: _isSearching
-                          ? IconButton(
-                              icon: const Icon(Icons.close),
-                              onPressed: () => _searchController.clear(),
-                            )
-                          : null,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.black, width: 1.5),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color(0x33000000),
+                          blurRadius: 0,
+                          offset: Offset(2, 2),
+                        ),
+                      ],
+                    ),
+                    child: TextField(
+                      controller: _searchController,
+                      decoration: InputDecoration(
+                        hintText: "Buscar Herói...",
+                        hintStyle: const TextStyle(color: Colors.black38),
+                        suffixIcon: _isSearching
+                            ? IconButton(
+                                icon: const Icon(Icons.close, color: Colors.black54),
+                                onPressed: () => _searchController.clear(),
+                              )
+                            : const Icon(Icons.search, color: Colors.black54),
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 14,
+                        ),
                       ),
-                      filled: true,
-                      fillColor: Colors.grey.shade200,
                     ),
                   ),
                 ),
 
-                const SizedBox(width: 8),
+                const SizedBox(width: 10),
 
-                Tooltip(
-                  message: 'Modo comparação',
-                  child: GestureDetector(
-                    onTap: () => _toggleModoComparacao(!modoComparacao),
+                // Botão de filtro estilo mockup
+                GestureDetector(
+                  onTap: () => _toggleModoComparacao(!modoComparacao),
+                  child: Tooltip(
+                    message: 'Modo comparação',
                     child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 250),
-                      padding: const EdgeInsets.all(10),
+                      duration: const Duration(milliseconds: 200),
+                      width: 50,
+                      height: 50,
                       decoration: BoxDecoration(
-                        color: modoComparacao ? Colors.blue : Colors.grey.shade200,
+                        color: modoComparacao ? Colors.black : Colors.white,
                         borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.black, width: 2),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0x33000000),
+                            blurRadius: 0,
+                            offset: Offset(2, 2),
+                          ),
+                        ],
                       ),
                       child: Icon(
                         Icons.compare_arrows,
-                        color: modoComparacao ? Colors.white : Colors.grey.shade600,
+                        color: modoComparacao ? Colors.white : Colors.black,
+                        size: 22,
                       ),
                     ),
                   ),
@@ -195,13 +217,47 @@ class _Home extends State<Home> {
             ),
           ),
 
-          // ← banner corrigido com botão de confirmar
+          // Toggle modo comparação
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
+            child: Row(
+              children: [
+                const Text(
+                  'Modo Duelo',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                    color: Colors.black87,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Switch(
+                  value: modoComparacao,
+                  onChanged: _toggleModoComparacao,
+                  activeColor: Colors.black,
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+              ],
+            ),
+          ),
+
+          // Banner de seleção
           if (modoComparacao)
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              width: double.infinity,
-              color: Colors.blue.shade50,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            Container(
+              margin: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.black, width: 1.5),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color(0x22000000),
+                    blurRadius: 0,
+                    offset: Offset(2, 2),
+                  ),
+                ],
+              ),
               child: Row(
                 children: [
                   Expanded(
@@ -211,24 +267,32 @@ class _Home extends State<Home> {
                           : heroisSelecionados.length == 1
                               ? 'Selecione mais 1 herói'
                               : '${heroisSelecionados[0].name} vs ${heroisSelecionados[1].name}',
-                      style: TextStyle(
-                        color: Colors.blue.shade700,
-                        fontWeight: FontWeight.w500,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 13,
+                        color: Colors.black87,
                       ),
                     ),
                   ),
                   if (heroisSelecionados.length == 2)
-                    ElevatedButton.icon(
-                      onPressed: _abrirComparacao,
-                      icon: const Icon(Icons.compare_arrows, size: 16),
-                      label: const Text('Comparar'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                        textStyle: const TextStyle(fontWeight: FontWeight.w700),
-                        shape: RoundedRectangleBorder(
+                    GestureDetector(
+                      onTap: _abrirComparacao,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 14,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.black,
                           borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Text(
+                          'Comparar',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 13,
+                          ),
                         ),
                       ),
                     ),
@@ -236,34 +300,58 @@ class _Home extends State<Home> {
               ),
             ),
 
+          // Título da lista
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+            child: Text(
+              _isSearching ? 'Resultados' : 'Heróis Populares',
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w800,
+                color: Colors.black,
+              ),
+            ),
+          ),
+
+          // Lista
           Expanded(
             child: _isSearchLoading
-                ? const Center(child: CircularProgressIndicator())
+                ? const Center(child: CircularProgressIndicator(color: Colors.black))
                 : displayList.isEmpty && _isLoading
-                    ? const Center(child: CircularProgressIndicator())
+                    ? const Center(child: CircularProgressIndicator(color: Colors.black))
                     : displayList.isEmpty && _isSearching
-                        ? const Center(child: Text("Nenhum herói encontrado"))
+                        ? const Center(
+                            child: Text(
+                              'Nenhum herói encontrado',
+                              style: TextStyle(color: Colors.black54),
+                            ),
+                          )
                         : ListView.builder(
                             controller: _scrollController,
-                            padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
+                            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                             itemCount: displayList.length +
                                 (!_isSearching && _hasMore ? 1 : 0),
                             itemBuilder: (context, index) {
                               if (index == displayList.length) {
                                 return const Padding(
                                   padding: EdgeInsets.symmetric(vertical: 16),
-                                  child: Center(child: CircularProgressIndicator()),
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                      color: Colors.black,
+                                    ),
+                                  ),
                                 );
                               }
 
                               final hero = displayList[index];
-
                               return Padding(
                                 padding: const EdgeInsets.only(bottom: 12),
                                 child: HeroCard(
                                   hero: hero,
                                   modoComparacao: modoComparacao,
-                                  selecionado: heroisSelecionados.any((h) => h.id == hero.id),
+                                  selecionado: heroisSelecionados.any(
+                                    (h) => h.id == hero.id,
+                                  ),
                                   onToggleSelecao: () => _toggleSelecaoHeroi(hero),
                                 ),
                               );
