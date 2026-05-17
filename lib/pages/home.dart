@@ -21,11 +21,11 @@ class _Home extends State<Home> {
   bool _isSearching = false;
   bool _isSearchLoading = false;
 
-  Timer? _debounce; // ✅ evita chamada a cada letra digitada
+  Timer? _debounce; // evita chamada a cada letra digitada
 
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _searchController = TextEditingController();
-  final RemoteService _service = RemoteService(); // ✅ instância única
+  final RemoteService _service = RemoteService(); // instância única
 
   @override
   void initState() {
@@ -62,7 +62,7 @@ class _Home extends State<Home> {
     const batchSize = 20;
     final to = (_currentId + batchSize).clamp(0, 732);
 
-    // ✅ paralelo: 20 requisições ao mesmo tempo
+    // paralelo: 20 requisições ao mesmo tempo
     final newHeroes = await _service.getHeroesByRange(_currentId, to);
 
     setState(() {
@@ -74,7 +74,7 @@ class _Home extends State<Home> {
   }
 
   void _onSearchChanged(String query) {
-    _debounce?.cancel(); // ✅ cancela o timer anterior
+    _debounce?.cancel(); // cancela o timer anterior
 
     if (query.isEmpty) {
       setState(() {
@@ -86,7 +86,7 @@ class _Home extends State<Home> {
 
     setState(() => _isSearching = true);
 
-    // ✅ só dispara a busca 500ms após parar de digitar
+    // só dispara a busca 500ms após parar de digitar
     _debounce = Timer(const Duration(milliseconds: 500), () async {
       setState(() => _isSearchLoading = true);
 
