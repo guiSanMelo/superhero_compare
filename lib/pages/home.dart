@@ -4,7 +4,7 @@ import 'package:superhero_compare/models/heroes_dto.dart';
 import 'package:superhero_compare/services/remote_service.dart';
 import 'package:superhero_compare/shared/hero_card.dart';
 import 'package:superhero_compare/shared/app_bar.dart';
-import 'package:superhero_compare/pages/comparison_page.dart';
+import 'package:superhero_compare/pages/comparison_page.dart'; 
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -114,10 +114,6 @@ class _Home extends State<Home> {
         heroisSelecionados.add(hero);
       }
     });
-
-    if (heroisSelecionados.length == 2) {
-      _abrirComparacao();
-    }
   }
 
   void _abrirComparacao() {
@@ -199,22 +195,44 @@ class _Home extends State<Home> {
             ),
           ),
 
+          // ← banner corrigido com botão de confirmar
           if (modoComparacao)
             AnimatedContainer(
               duration: const Duration(milliseconds: 200),
               width: double.infinity,
               color: Colors.blue.shade50,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Text(
-                heroisSelecionados.isEmpty
-                    ? 'Selecione 2 heróis para comparar'
-                    : heroisSelecionados.length == 1
-                        ? 'Selecione mais 1 herói'
-                        : 'Abrindo comparação...',
-                style: TextStyle(
-                  color: Colors.blue.shade700,
-                  fontWeight: FontWeight.w500,
-                ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      heroisSelecionados.isEmpty
+                          ? 'Selecione 2 heróis para comparar'
+                          : heroisSelecionados.length == 1
+                              ? 'Selecione mais 1 herói'
+                              : '${heroisSelecionados[0].name} vs ${heroisSelecionados[1].name}',
+                      style: TextStyle(
+                        color: Colors.blue.shade700,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  if (heroisSelecionados.length == 2)
+                    ElevatedButton.icon(
+                      onPressed: _abrirComparacao,
+                      icon: const Icon(Icons.compare_arrows, size: 16),
+                      label: const Text('Comparar'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                        textStyle: const TextStyle(fontWeight: FontWeight.w700),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                ],
               ),
             ),
 
