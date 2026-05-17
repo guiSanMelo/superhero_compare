@@ -241,7 +241,7 @@ class _Home extends State<Home> {
             ),
           ),
 
-          // Banner de seleção
+          
           if (modoComparacao)
             Container(
               margin: const EdgeInsets.fromLTRB(16, 8, 16, 0),
