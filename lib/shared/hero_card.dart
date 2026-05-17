@@ -1,75 +1,94 @@
 import 'package:flutter/material.dart';
 import '../models/heroes_dto.dart';
+import '../pages/info_hero.dart';
 
 class HeroCard extends StatelessWidget {
   final Heroes hero;
 
-  const HeroCard({super.key, required this.hero}); // ✅ ponto e vírgula
+  const HeroCard({super.key, required this.hero});
 
   Color _alignmentColor(String alignment) {
     switch (alignment.toLowerCase()) {
-      case 'good': return Colors.blue;
-      case 'bad':  return Colors.red;
-      default:     return Colors.grey;
+      case 'good':
+        return Colors.blue;
+      case 'bad':
+        return Colors.red;
+      default:
+        return Colors.grey;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.black, width: 1.5),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x22000000),
-            blurRadius: 4,
-            offset: Offset(2, 2),
-          )
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-        child: Row(
-          children: [
-            Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                color: Colors.amber,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.network(
-                  hero.heroImage.url, // ✅ .url correto
-                  fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) =>
-                      const Icon(Icons.broken_image, color: Colors.white),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => InfoHero(hero: hero),
+          ),
+        );
+      },
+
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: Colors.black, width: 1.5),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x22000000),
+              blurRadius: 4,
+              offset: Offset(2, 2),
+            )
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+          child: Row(
+            children: [
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  color: Colors.amber,
+                  borderRadius: BorderRadius.circular(10),
                 ),
-              ),
-            ),
-            const SizedBox(width: 16),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  hero.name,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF1A1A2E),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.network(
+                    hero.heroImage.url,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) =>
+                        const Icon(Icons.broken_image, color: Colors.white),
                   ),
                 ),
-                const SizedBox(height: 6),
-                _TypeBadge(
-                  label: hero.biography.alignment,
-                  color: _alignmentColor(hero.biography.alignment), // ✅ cor passada
-                ),
-              ],
-            ),
-          ],
+              ),
+
+              const SizedBox(width: 16),
+
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    hero.name,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF1A1A2E),
+                    ),
+                  ),
+
+                  const SizedBox(height: 6),
+
+                  _TypeBadge(
+                    label: hero.biography.alignment,
+                    color: _alignmentColor(hero.biography.alignment),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
